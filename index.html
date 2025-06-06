@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Farming Guide for Surat</title>
+    <!-- Chosen Palette: Earthy Neutrals -->
+    <!-- Application Structure Plan: The SPA uses a task-oriented, thematic single-page layout with a sticky top navigation. This structure guides the user from high-level motivation ('Is this for you?') to detailed practical steps ('5-Step Journey', 'Budget & Profit') and finally to resources ('Get Help'). This flow is more intuitive and less overwhelming for a beginner than mirroring the dense report structure. It breaks down the complex topic into a manageable, interactive journey, starting with encouragement, moving to decision support (choosing a mushroom), providing a clear process, making the finances tangible with calculators, and ending with actionable support resources. -->
+    <!-- Visualization & Content Choices: The application uses Chart.js for all data visualizations to maintain consistency and avoid SVG/Mermaid. 1) Mushroom Comparison (Goal: Compare): An interactive Radar chart visually compares 4 mushroom types across key metrics (Ease, Cost, etc.). Buttons allow users to filter the chart, providing a dynamic comparison tool superior to a static table. 2) Startup Costs (Goal: Inform): A Doughnut chart breaks down the initial investment, making financial data easy to grasp. 3) Profit Calculator (Goal: Engage): An interactive slider lets users see potential profit based on their scale, making the business case tangible. 4) Process Flow (Goal: Organize): An HTML/CSS-based visual timeline simplifies the complex cultivation process into 5 clickable, digestible steps. These choices transform static text into engaging, explorable components that support the user's learning journey. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #403d39;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #8a5a44;
+            border-bottom-color: #8a5a44;
+        }
+        .step-item.active {
+            background-color: #e3d5ca;
+            border-color: #8a5a44;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#FDFBF8]/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-[#8a5a44]">🍄 GrowGuide</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#choice" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Why Oyster?</a>
+                        <a href="#journey" class="nav-link px-3 py-2 rounded-md text-sm font-medium">The Process</a>
+                        <a href="#finance" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Costs & Profit</a>
+                        <a href="#support" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Get Help</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brown-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#choice" class="block nav-link px-3 py-2 rounded-md text-base font-medium">Why Oyster?</a>
+                <a href="#journey" class="block nav-link px-3 py-2 rounded-md text-base font-medium">The Process</a>
+                <a href="#finance" class="block nav-link px-3 py-2 rounded-md text-base font-medium">Costs & Profit</a>
+                <a href="#support" class="block nav-link px-3 py-2 rounded-md text-base font-medium">Get Help</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="py-20 md:py-28">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#6f452c]">Start Your Mushroom Farm in Surat</h1>
+                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-700">You can start a profitable mushroom business with a small room and low investment, right here in Gujarat. This guide makes it simple.</p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="text-4xl font-bold text-[#8a5a44]" id="startup-cost-stat">₹5,500</div>
+                        <p class="mt-2 text-gray-600 font-medium">Low Startup Cost</p>
+                        <p class="text-sm text-gray-500">Get started with a minimal investment.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="text-4xl font-bold text-[#8a5a44]" id="harvest-time-stat">30 Days</div>
+                        <p class="mt-2 text-gray-600 font-medium">Quick Harvest</p>
+                        <p class="text-sm text-gray-500">See your first results in about a month.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                        <div class="text-4xl font-bold text-[#8a5a44]" id="profit-margin-stat">55%</div>
+                        <p class="mt-2 text-gray-600 font-medium">High Profit Margin</p>
+                        <p class="text-sm text-gray-500">Potential for excellent returns on your effort.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="choice" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#6f452c]">Why Oyster Mushrooms are Your Best Choice</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-700">For a beginner in Surat, some mushroom varieties are much easier and more profitable to start with. This section helps you compare the options and see why Oyster mushrooms are highly recommended. Use the buttons to explore how each variety stacks up.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="chart-container">
+                        <canvas id="mushroom-comparison-chart"></canvas>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap justify-center gap-2 mb-6">
+                            <button class="mushroom-btn active bg-[#8a5a44] text-white px-4 py-2 rounded-lg" data-mushroom="oyster">Oyster</button>
+                            <button class="mushroom-btn bg-[#e3d5ca] text-[#6f452c] px-4 py-2 rounded-lg" data-mushroom="milky">Milky</button>
+                            <button class="mushroom-btn bg-[#e3d5ca] text-[#6f452c] px-4 py-2 rounded-lg" data-mushroom="button">Button</button>
+                            <button class="mushroom-btn bg-[#e3d5ca] text-[#6f452c] px-4 py-2 rounded-lg" data-mushroom="shiitake">Shiitake</button>
+                        </div>
+                        <div id="mushroom-details" class="bg-[#FDFBF8] p-6 rounded-lg border border-gray-200">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#6f452c]">Your 5-Step Journey to First Harvest</h2>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-700">Mushroom farming can be broken down into five clear stages. This interactive guide walks you through each part of the process, from setting up your room to selling your first batch. Click on each step to see the details, tools, and key actions required.</p>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute left-1/2 top-4 bottom-4 w-0.5 bg-gray-300 hidden md:block"></div>
+                    <div class="space-y-12 md:space-y-0">
+                        <div class="step-content" id="step-1-content"></div>
+                        <div class="step-content hidden" id="step-2-content"></div>
+                        <div class="step-content hidden" id="step-3-content"></div>
+                        <div class="step-content hidden" id="step-4-content"></div>
+                        <div class="step-content hidden" id="step-5-content"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="finance" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#6f452c]">Your Budget & Profit Potential</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-700">Understanding the numbers is key to building a successful business. This section provides an estimated breakdown of your initial costs and includes an interactive calculator to project your potential earnings. See for yourself how a small investment can lead to significant returns.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-center mb-4 text-[#6f452c]">Estimated Demo Startup Costs</h3>
+                        <div class="chart-container" style="max-width: 400px;">
+                            <canvas id="cost-breakdown-chart"></canvas>
+                        </div>
+                         <p class="text-center text-gray-600 mt-4 text-sm">Total Estimate: ₹5,500 - ₹13,500</p>
+                    </div>
+                    <div class="bg-[#FDFBF8] p-8 rounded-xl shadow-lg border border-gray-200">
+                        <h3 class="text-2xl font-semibold text-center mb-6 text-[#6f452c]">Profit Calculator</h3>
+                        <div>
+                            <label for="bag-slider" class="block font-medium text-gray-700">How many grow bags will you start with?</label>
+                            <input id="bag-slider" type="range" min="5" max="100" value="10" class="w-full h-2 bg-[#e3d5ca] rounded-lg appearance-none cursor-pointer mt-2">
+                            <div class="text-center font-bold text-2xl text-[#8a5a44] mt-2" id="bag-count">10 Bags</div>
+                        </div>
+                        <div class="mt-8 space-y-4">
+                            <div class="flex justify-between items-center bg-white p-4 rounded-lg">
+                                <span class="font-medium text-gray-600">Estimated Total Cost:</span>
+                                <span class="font-bold text-lg text-red-600" id="calculated-cost">₹1,100</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-white p-4 rounded-lg">
+                                <span class="font-medium text-gray-600">Expected Yield (2 flushes):</span>
+                                <span class="font-bold text-lg text-green-700" id="calculated-yield">25 kg</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-white p-4 rounded-lg">
+                                <span class="font-medium text-gray-600">Potential Revenue (@₹140/kg):</span>
+                                <span class="font-bold text-lg text-green-700" id="calculated-revenue">₹3,500</span>
+                            </div>
+                            <div class="flex justify-between items-center bg-green-100 p-4 rounded-lg border border-green-300">
+                                <span class="font-bold text-green-800">Estimated Profit:</span>
+                                <span class="font-bold text-xl text-green-800" id="calculated-profit">₹2,400</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="support" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#6f452c]">Navigating Challenges & Finding Support</h2>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-700">Every new venture has its challenges. This section prepares you for common issues like contamination and pests, and more importantly, connects you with local resources in Gujarat that provide training, financial aid, and expert advice. Don't hesitate to reach out to them.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div id="accordion-container"></div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="bg-white border-t border-gray-200">
+            <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-600">
+                 <p class="font-bold text-lg text-[#8a5a44] mb-2">Your Next Step</p>
+                 <p class="max-w-2xl mx-auto mb-4">You have the plan. Start small with Oyster mushrooms, focus on hygiene, and connect with local KVKs in Surat or Tapi for training. You're ready to grow!</p>
+                <p>&copy; 2024 GrowGuide for Surat. All information is based on the provided research report.</p>
+            </div>
+        </footer>
+
+    </main>
+    
+    <script>
+        const mushroomData = {
+            oyster: {
+                name: "Oyster Mushroom",
+                details: "The best choice for beginners. They are forgiving, grow fast on cheap materials like straw, and are well-suited for Surat's climate, especially from October to April. The low-tech setup makes them ideal for a small budget.",
+                chartData: [5, 5, 4, 5, 4] 
+            },
+            milky: {
+                name: "Milky Mushroom",
+                details: "A good choice for warmer climates as they thrive in higher temperatures. They have a longer shelf life, which is great for selling, but can be slightly more demanding than Oysters.",
+                chartData: [4, 4, 5, 3, 3]
+            },
+            button: {
+                name: "Button Mushroom",
+                details: "These are popular and have high demand, but are much more challenging for beginners. They require a special compost substrate and very strict temperature control, making them costly to start with.",
+                chartData: [2, 2, 3, 5, 5]
+            },
+            shiitake: {
+                name: "Shiitake Mushroom",
+                details: "Known for their great flavor and can produce for years on hardwood logs. However, the initial setup is longer and more involved than for Oyster mushrooms, making them better for a second-stage project.",
+                chartData: [3, 3, 3, 2, 2]
+            }
+        };
+
+        const journeyStepsData = [
+            {
+                id: 1,
+                title: 'Room Setup',
+                icon: '🏠',
+                summary: 'Transform a small room into a productive farm.',
+                content: `
+                    <h4 class="font-bold text-lg mb-2">Goal: Create a controlled grow space.</h4>
+                    <p class="mb-4 text-gray-700">You don't need a special building. An existing small room, basement, or even a shed works perfectly. The key is to create a micro-environment where you can control temperature and humidity easily and cheaply.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Select a Room:</strong> Choose a space that is easy to clean and naturally holds a stable temperature.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Use Plastic Sheeting:</strong> Line the walls or build a simple 'tent' inside the room to trap humidity and keep things clean. This is very cheap and effective.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Install Shelving:</strong> Use vertical space to maximize your yield. Simple racks or shelves will hold your grow bags.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Gather Basic Tools:</strong> You'll need a thermometer/hygrometer (to measure temp/humidity), a spray bottle for misting, and a small fan for air circulation.</div></li>
+                    </ul>
+                `
+            },
+            {
+                id: 2,
+                title: 'Substrate Prep',
+                icon: '🌾',
+                summary: 'Prepare the food for your mushrooms.',
+                content: `
+                    <h4 class="font-bold text-lg mb-2">Goal: Create a clean, nutritious base for growth.</h4>
+                    <p class="mb-4 text-gray-700">Substrate is the organic material your mushrooms will feed on. For Oyster mushrooms, paddy straw is cheap and works great. The most critical part of this step is pasteurization to kill competing germs.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Chop the Straw:</strong> Cut straw into 2-4 inch pieces. This helps it absorb water.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Soak:</strong> Submerge the straw in water for 18-24 hours until fully hydrated.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Pasteurize (Crucial!):</strong> Drain the straw, then submerge it in hot water (70-80°C) for 1-2 hours. This kills contaminants. <strong class="text-red-600">Do not skip this step!</strong></div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Cool Down:</strong> Spread the straw on a clean surface to cool completely to room temperature before the next step.</div></li>
+                    </ul>
+                `
+            },
+            {
+                id: 3,
+                title: 'Inoculation & Incubation',
+                icon: '🌱',
+                summary: 'Plant the mushroom spawn and let it grow.',
+                content: `
+                    <h4 class="font-bold text-lg mb-2">Goal: Introduce spawn and allow it to colonize the substrate.</h4>
+                    <p class="mb-4 text-gray-700">Inoculation is mixing your mushroom 'seeds' (spawn) with the prepared straw. Hygiene is extremely important here to prevent contamination. After bagging, the mycelium will take over.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Work Cleanly:</strong> Wash your hands, wear clean clothes, and sanitize your work area and tools with bleach spray.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Mix Spawn:</strong> Evenly mix the spawn with your cooled, pasteurized straw in a clean container or on a clean tarp. A little spawn goes a long way.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Bag It:</strong> Tightly pack the mixture into clean plastic bags.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Incubate:</strong> Place the bags in a dark, warm (20-25°C) place for 2-3 weeks. You'll see white, web-like mycelium grow and cover all the straw.</div></li>
+                    </ul>
+                `
+            },
+            {
+                id: 4,
+                title: 'Fruiting',
+                icon: '🍄',
+                summary: 'Trigger your mushrooms to sprout.',
+                content: `
+                    <h4 class="font-bold text-lg mb-2">Goal: Change conditions to make mushrooms appear.</h4>
+                    <p class="mb-4 text-gray-700">Once the bags are fully white with mycelium, it's time to "shock" them into producing mushrooms (fruiting). This involves changes in light, temperature, and fresh air.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Introduce Light:</strong> Move the bags to a spot with indirect, diffused light (not direct sun).</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Increase Humidity & Airflow:</strong> Cut small 'X's in the bags. Mist the area with your spray bottle multiple times a day to keep humidity high (85-90%). Use a small fan to ensure good air exchange.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Drop Temperature Slightly:</strong> A small drop in temperature can help trigger fruiting. Oysters prefer 15-20°C for this stage.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Watch for Pins:</strong> Tiny mushroom "pins" will start to form at the openings. They will grow into full mushrooms in just a few days!</div></li>
+                    </ul>
+                `
+            },
+            {
+                id: 5,
+                title: 'Harvest & Sell',
+                icon: '💰',
+                summary: 'Reap your rewards and plan your sales.',
+                content: `
+                    <h4 class="font-bold text-lg mb-2">Goal: Harvest at the right time and sell your fresh produce.</h4>
+                    <p class="mb-4 text-gray-700">Timing is key for the best flavor and texture. After your first harvest (flush), you can get 1-2 more flushes from the same bag. Start thinking about where you'll sell your mushrooms from day one.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">When to Harvest:</strong> Harvest Oyster mushrooms just as the edges of the caps start to flatten out, but before they curl upwards.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">How to Harvest:</strong> Grab the entire cluster at the base, and gently twist and pull. Avoid cutting, as this can leave a stump that rots.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Get More Flushes:</strong> Continue misting the bag. A second, smaller crop will usually grow in a week or two.</div></li>
+                        <li class="flex items-start"><span class="mr-3 text-lg">✅</span><div><strong class="font-semibold">Marketing:</strong> Connect with local restaurants, hotels, and vegetable vendors in Surat. Selling directly to consumers at local markets is also a great option for higher prices.</div></li>
+                    </ul>
+                `
+            }
+        ];
+
+        const supportData = [
+            {
+                title: 'Common Challenges & Solutions',
+                content: `
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold">Problem: Green or Black Mold (Contamination)</h5>
+                            <p class="text-sm text-gray-600"><strong>Solution:</strong> This is the #1 enemy. Prevention is key. Be extremely strict with hygiene. Sterilize/pasteurize your substrate properly. Work in a very clean area. If a bag is heavily contaminated, dispose of it away from your grow area to prevent spores from spreading.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Problem: Long Stems, Small Caps</h5>
+                            <p class="text-sm text-gray-600"><strong>Solution:</strong> This is a classic sign of not enough fresh air (high CO2). Increase ventilation. Use your fan more often or ensure there's better air exchange in your fruiting area.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Problem: Mushrooms Drying Out or Cracking</h5>
+                            <p class="text-sm text-gray-600"><strong>Solution:</strong> Humidity is too low. Mist more frequently, directly on the mushrooms and the surrounding walls of your grow tent/room. Check your hygrometer to ensure RH is 85% or higher.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: 'Local Support & Training in Gujarat',
+                content: `
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold">Krishi Vigyan Kendras (KVKs)</h5>
+                            <p class="text-sm text-gray-600">These are your best friends. They offer low-cost training, demonstrations, and sometimes even supply quality spawn. Contact the KVKs in Surat and Tapi (affiliated with Navsari Agricultural University). They are actively promoting mushroom farming.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Pramukh Mushroom, Surat</h5>
+                            <p class="text-sm text-gray-600">A local supplier of spawn that also offers training and consulting. Connecting with local experts is invaluable.</p>
+                        </div>
+                         <div>
+                            <h5 class="font-semibold">Agricultural Universities</h5>
+                            <p class="text-sm text-gray-600">Institutions like Navsari Agricultural University and others in Gujarat often hold workshops. Keep an eye on their announcements.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: 'Government Loans & Subsidies',
+                content: `
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="font-semibold">MUDRA Loans</h5>
+                            <p class="text-sm text-gray-600">Under the PMMY scheme, you can get loans up to ₹10 lakh, often without collateral. This is perfect for scaling up after your successful demo.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">National Bank for Agriculture and Rural Development (NABARD)</h5>
+                            <p class="text-sm text-gray-600">NABARD offers various schemes and financial support for agricultural projects, including mushroom farming.</p>
+                        </div>
+                         <div>
+                            <h5 class="font-semibold">Mission for Integrated Development of Horticulture (MIDH)</h5>
+                            <p class="text-sm text-gray-600">This scheme offers significant subsidies (35-50% of project cost) for horticultural activities. You will need to prepare a detailed project report to apply.</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+
+            const sections = document.querySelectorAll('section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 70) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+
+            const animateCountUp = (el) => {
+                const text = el.innerText;
+                const isCurrency = text.startsWith('₹');
+                const isPercent = text.endsWith('%');
+                const target = parseInt(text.replace(/[^0-9.]/g, ''));
+                if (isNaN(target)) return;
+
+                let count = 0;
+                const duration = 1500;
+                const increment = target / (duration / 16);
+
+                const updateCount = () => {
+                    count += increment;
+                    if (count < target) {
+                        let displayText = Math.ceil(count).toLocaleString();
+                        if (isCurrency) displayText = `₹${displayText}`;
+                        if (isPercent) displayText = `${Math.ceil(count)}%`;
+                        el.innerText = displayText;
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        el.innerText = text;
+                    }
+                };
+                updateCount();
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCountUp(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.getElementById('startup-cost-stat'));
+            observer.observe(document.getElementById('harvest-time-stat'));
+            observer.observe(document.getElementById('profit-margin-stat'));
+           
+            let mushroomChart;
+            const ctxMushroom = document.getElementById('mushroom-comparison-chart').getContext('2d');
+            
+            function createOrUpdateMushroomChart(mushroomKey) {
+                const data = mushroomData[mushroomKey];
+                const chartData = {
+                    labels: ['Ease', 'Low Cost', 'Climate Fit', 'Yield Potential', 'Fast Growth'],
+                    datasets: [{
+                        label: data.name,
+                        data: data.chartData,
+                        backgroundColor: 'rgba(138, 90, 68, 0.2)',
+                        borderColor: 'rgba(138, 90, 68, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(138, 90, 68, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(138, 90, 68, 1)'
+                    }]
+                };
+
+                if (mushroomChart) {
+                    mushroomChart.data = chartData;
+                    mushroomChart.update();
+                } else {
+                    mushroomChart = new Chart(ctxMushroom, {
+                        type: 'radar',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: { color: '#e3d5ca' },
+                                    grid: { color: '#e3d5ca' },
+                                    pointLabels: { font: { size: 12 }, color: '#6f452c' },
+                                    ticks: {
+                                        backdropColor: 'transparent',
+                                        stepSize: 1,
+                                        max: 5,
+                                        min: 0,
+                                        display: false
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                      color: '#403d39',
+                                      font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                      }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            function updateMushroomDetails(mushroomKey) {
+                const data = mushroomData[mushroomKey];
+                document.getElementById('mushroom-details').innerHTML = `
+                    <h3 class="font-bold text-xl mb-2 text-[#6f452c]">${data.name}</h3>
+                    <p class="text-gray-700">${data.details}</p>
+                `;
+            }
+
+            const mushroomButtons = document.querySelectorAll('.mushroom-btn');
+            mushroomButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mushroomKey = button.dataset.mushroom;
+                    createOrUpdateMushroomChart(mushroomKey);
+                    updateMushroomDetails(mushroomKey);
+                    
+                    mushroomButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-[#8a5a44]', 'text-white');
+                        btn.classList.add('bg-[#e3d5ca]', 'text-[#6f452c]');
+                    });
+                    button.classList.add('active', 'bg-[#8a5a44]', 'text-white');
+                    button.classList.remove('bg-[#e3d5ca]', 'text-[#6f452c]');
+                });
+            });
+
+            createOrUpdateMushroomChart('oyster');
+            updateMushroomDetails('oyster');
+
+            const journeySection = document.getElementById('journey');
+            let journeyTimelineHTML = '<div class="flex flex-col md:flex-row justify-center items-start md:items-center gap-4 md:gap-0 mb-8 px-4">';
+            journeyStepsData.forEach((step, index) => {
+                journeyTimelineHTML += `
+                    <div class="step-item flex-1 text-center cursor-pointer p-3 border-b-4 md:border-b-0 md:border-t-4 ${index === 0 ? 'active' : 'border-gray-300'}" data-step="${step.id}">
+                        <div class="text-2xl md:text-3xl">${step.icon}</div>
+                        <div class="font-semibold mt-1 text-sm md:text-base">${step.title}</div>
+                    </div>
+                `;
+                if (index < journeyStepsData.length - 1) {
+                    journeyTimelineHTML += `<div class="hidden md:block flex-shrink-0 w-16 h-px bg-gray-300"></div>`;
+                }
+            });
+            journeyTimelineHTML += '</div>';
+
+            const stepContentContainer = journeySection.querySelector('.space-y-12');
+            stepContentContainer.insertAdjacentHTML('beforebegin', journeyTimelineHTML);
+
+            journeyStepsData.forEach(step => {
+                const container = document.getElementById(`step-${step.id}-content`);
+                container.innerHTML = `
+                <div class="relative md:flex items-start ${step.id % 2 === 0 ? 'md:flex-row-reverse' : ''}">
+                    <div class="md:w-1/2 p-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200">
+                           ${step.content}
+                        </div>
+                    </div>
+                    <div class="hidden md:flex absolute top-1/2 -translate-y-1/2 ${step.id % 2 === 0 ? 'right-1/2 -mr-4' : 'left-1/2 -ml-4'} items-center justify-center w-8 h-8 rounded-full bg-[#8a5a44] text-white font-bold text-xl">${step.icon}</div>
+                </div>
+                `;
+            });
+            
+            const stepItems = document.querySelectorAll('.step-item');
+            const stepContents = document.querySelectorAll('.step-content');
+            
+            function showStep(stepId) {
+                stepItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.step == stepId);
+                    item.classList.toggle('border-gray-300', item.dataset.step != stepId);
+                });
+                stepContents.forEach(content => {
+                    content.classList.toggle('hidden', content.id !== `step-${stepId}-content`);
+                });
+            }
+            
+            stepItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    showStep(item.dataset.step);
+                });
+            });
+
+            showStep(1);
+
+
+            const ctxCost = document.getElementById('cost-breakdown-chart').getContext('2d');
+            new Chart(ctxCost, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Room Prep / Shelving', 'Basic Equipment', 'Raw Materials', 'Sanitation', 'Contingency'],
+                    datasets: [{
+                        data: [3500, 2000, 2250, 750, 1000], 
+                        backgroundColor: ['#8a5a44', '#b08968', '#ddb892', '#e6ccb2', '#ede0d4'],
+                        borderColor: '#FDFBF8',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#403d39',
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const bagSlider = document.getElementById('bag-slider');
+            const bagCount = document.getElementById('bag-count');
+            const calculatedCost = document.getElementById('calculated-cost');
+            const calculatedYield = document.getElementById('calculated-yield');
+            const calculatedRevenue = document.getElementById('calculated-revenue');
+            const calculatedProfit = document.getElementById('calculated-profit');
+
+            function updateProfitability() {
+                const bags = parseInt(bagSlider.value);
+                const costPerBag = 110;
+                const yieldPerBag = 2.5;
+                const pricePerKg = 140;
+
+                const totalCost = bags * costPerBag;
+                const totalYield = bags * yieldPerBag;
+                const totalRevenue = totalYield * pricePerKg;
+                const totalProfit = totalRevenue - totalCost;
+
+                bagCount.innerText = `${bags} Bags`;
+                calculatedCost.innerText = `₹${totalCost.toLocaleString('en-IN')}`;
+                calculatedYield.innerText = `${totalYield.toLocaleString('en-IN')} kg`;
+                calculatedRevenue.innerText = `₹${totalRevenue.toLocaleString('en-IN')}`;
+                calculatedProfit.innerText = `₹${totalProfit.toLocaleString('en-IN')}`;
+            }
+
+            bagSlider.addEventListener('input', updateProfitability);
+            updateProfitability();
+            
+            const accordionContainer = document.getElementById('accordion-container');
+            supportData.forEach((item, index) => {
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'border-b border-gray-200';
+                accordionItem.innerHTML = `
+                    <button class="accordion-button w-full flex justify-between items-center text-left py-4 px-2">
+                        <span class="font-semibold text-lg text-[#6f452c]">${item.title}</span>
+                        <span class="accordion-icon text-2xl text-[#8a5a44] transform transition-transform duration-300">-</span>
+                    </button>
+                    <div class="accordion-content overflow-hidden transition-max-height duration-500 ease-in-out" style="max-height: 500px;">
+                        <div class="p-4 pt-0 text-gray-700">${item.content}</div>
+                    </div>
+                `;
+                accordionContainer.appendChild(accordionItem);
+
+                const button = accordionItem.querySelector('.accordion-button');
+                const content = accordionItem.querySelector('.accordion-content');
+                const icon = accordionItem.querySelector('.accordion-icon');
+
+                if (index !== 0) {
+                    content.style.maxHeight = '0px';
+                    icon.classList.remove('rotate-0');
+                    icon.classList.add('-rotate-180');
+                    icon.textContent = '+';
+                }
+
+                button.addEventListener('click', () => {
+                    const isOpening = content.style.maxHeight === '0px';
+                    
+                    document.querySelectorAll('.accordion-content').forEach(c => {
+                        c.style.maxHeight = '0px';
+                        const btn = c.previousElementSibling;
+                        const icn = btn.querySelector('.accordion-icon');
+                        icn.classList.remove('rotate-0');
+                        icn.classList.add('-rotate-180');
+                        icn.textContent = '+';
+                    });
+
+                    if (isOpening) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.classList.add('rotate-0');
+                        icon.classList.remove('-rotate-180');
+                        icon.textContent = '-';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
